@@ -9,8 +9,10 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Handle login logic here
+        print(request.form['username'])
+        print(request.form['password'])
         pass
+    
     return render_template('login.html')
 
 if __name__ == '__main__':
