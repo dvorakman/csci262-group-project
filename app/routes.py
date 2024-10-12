@@ -3,6 +3,7 @@ from app.forms import LoginForm, RegisterForm, MFAForm
 from app.utils.security import verify_password, generate_unique_user_id
 from utils.register_users import register_user
 from utils.security import hash_password
+from base64 import b64encode
 
 main_bp = Blueprint('main', __name__)
 

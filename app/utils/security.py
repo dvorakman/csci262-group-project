@@ -20,7 +20,7 @@ def hash_password(password: str):
     }
 
 
-def verify_password(stored_hash: base64, stored_salt: base64, password: str):
+def verify_password(stored_hash: base64, stored_salt: base64 = "", password: str=""):
     """Verify the given password against the stored hash and salt."""
     # Convert the password to bytes and decode the stored salt and hash
     password_bytes = password.encode('utf-8')
