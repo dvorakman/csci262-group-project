@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, session
 from app.forms import LoginForm, RegisterForm, MFAForm
-from app.utils.security import verify_password, hash_password, generate_unique_user_id
+from app.utils.security import verify_password, generate_unique_user_id
+from utils.register_users import register_user
+from utils.security import hash_password
 
 main_bp = Blueprint('main', __name__)
 
@@ -34,26 +36,32 @@ def login():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        first_name = form.first_name.data
-        last_name = form.last_name.data
-        email = form.email.data
-        username = form.username.data
-        password = hash_password(form.password.data)
+            username = form.username.data
+            password = form.password.data
+            first_name = form.first_name.data
+            last_name = form.last_name.data
+            email = form.email.data
+            username = form.username.data
+            password = hash_password(form.password.data)
+            
+            # Register the user in the in-memory dictionary
+            if username not in current_app.users:
+                user_id = generate_unique_user_id()  # Function to generate a unique user ID
+                current_app.users[username] = {
+                    'id': user_id,
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'email': email,
+                    'password': password
+                }
+
+            if register_user(username, password):
+                 flash('User registered successfully!', 'success')
+            else:
+                flash('User already exists!', 'danger')
         
-        # Register the user in the in-memory dictionary
-        if username not in current_app.users:
-            user_id = generate_unique_user_id()  # Function to generate a unique user ID
-            current_app.users[username] = {
-                'id': user_id,
-                'first_name': first_name,
-                'last_name': last_name,
-                'email': email,
-                'password': password
-            }
-            flash('User registered successfully!', 'success')
+            
             return redirect(url_for('main.login'))
-        else:
-            flash('User already exists!', 'danger')
     return render_template('register.html', form=form)
 
 @main_bp.route('/mfa', methods=['GET', 'POST'])
