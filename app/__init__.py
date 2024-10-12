@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_wtf import CSRFProtect
+from app.utils.load_users import load_user_database
 
 def create_app():
     app = Flask(__name__)
@@ -14,5 +15,6 @@ def create_app():
     
     # In-memory user storage
     app.users = {}
+    app.users = load_user_database()
     
     return app
