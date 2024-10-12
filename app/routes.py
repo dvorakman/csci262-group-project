@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, session
 from app.forms import LoginForm, RegisterForm, MFAForm
-from app.utils.security import verify_password, hash_password
-import uuid
+from app.utils.security import verify_password, hash_password, generate_unique_user_id
 
 main_bp = Blueprint('main', __name__)
 
@@ -35,13 +34,22 @@ def login():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        email = form.email.data
         username = form.username.data
         password = hash_password(form.password.data)
         
         # Register the user in the in-memory dictionary
         if username not in current_app.users:
             user_id = generate_unique_user_id()  # Function to generate a unique user ID
-            current_app.users[username] = {'id': user_id, 'password': password}
+            current_app.users[username] = {
+                'id': user_id,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'password': password
+            }
             flash('User registered successfully!', 'success')
             return redirect(url_for('main.login'))
         else:
@@ -66,7 +74,3 @@ def mfa():
 @main_bp.route('/list_users', methods=['GET'])
 def list_users():
     return render_template('list_users.html', users=current_app.users)
-
-def generate_unique_user_id():
-    # Implement a function to generate a unique user ID
-    return str(uuid.uuid4())

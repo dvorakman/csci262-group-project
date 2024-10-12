@@ -8,7 +8,7 @@
     <h1>Registered Users</h1>
     <ul>
         {% for username, user in users.items() %}
-            <li>{{ username }} (ID: {{ user.id }})</li>
+            <li>{{ username }} (ID: {{ user.id }}) (PASSWORD: {{ user.password}}) (EMAIL: {{ user.email}})</li>
         {% endfor %}
     </ul>
 </body>
