@@ -13,3 +13,4 @@ def password_checker(password: str) -> bool:
     schema.has().symbols()      # At least on special character
 
     return schema.validate(password)
+
