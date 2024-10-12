@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Users</title>
+</head>
+<body>
+    <h1>Registered Users</h1>
+    <ul>
+        {% for username, user in users.items() %}
+            <li>{{ username }} (ID: {{ user.id }})</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

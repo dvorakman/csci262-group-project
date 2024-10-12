@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>MFA Challenge</h2>
+<form method="POST" action="{{ url_for('main.mfa') }}">
+    {{ form.hidden_tag() }}
+    <button type="submit">Complete MFA</button>
+</form>
+{% endblock %}
