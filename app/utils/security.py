@@ -3,6 +3,7 @@ import hashlib
 from os import urandom
 import base64
 from config import Config
+from password_validator import PasswordValidator
 
 def hash_password(password: str):
     """Hash the given password with a random salt and a pepper."""
@@ -37,3 +38,17 @@ def verify_password(stored_hash: base64, stored_salt: base64 = "", password: str
 def generate_unique_user_id():
     # Implement a function to generate a unique user ID
     return str(uuid.uuid4())
+
+def password_checker(password: str) -> bool:
+    # Create a schema
+    schema = PasswordValidator()
+
+    # Add properties to the schema
+    schema.has().uppercase()    # At least one uppercase letter
+    schema.has().lowercase()    # At least one lowercase letter
+    schema.has().digits()       # At least one digit
+    schema.has().no().spaces()  # No spaces allowed
+    schema.has().symbols()      # At least one special character
+
+    # Validate the password based on the schema
+    return schema.validate(password)
