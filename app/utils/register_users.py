@@ -1,5 +1,5 @@
 from config import Config
-from security import hash_password, verify_password
+from app.utils.security import hash_password, verify_password
 
 def register_user(username: str, password: str) -> bool:
     """Register a new user with the given username and password."""

@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, session
 from app.forms import LoginForm, RegisterForm, MFAForm
 from app.utils.security import verify_password, generate_unique_user_id
-from utils.register_users import register_user
-from utils.security import hash_password
+from app.utils.register_users import register_user
+import app.utils.security
 from base64 import b64encode
 
 main_bp = Blueprint('main', __name__)
@@ -23,14 +23,15 @@ def login():
         username = form.username.data
         password = form.password.data
         user = current_app.users.get(username)
-
+        print(current_app.users)
         if user and verify_password(user['password'], password):
+            print(f"{user} logged in")
             session['user_id'] = user['id']
             session['logged_in'] = True  # Set session token
             flash('Login successful, please complete MFA', 'success')
             return redirect(url_for('main.mfa'))
-        
-        flash('Invalid username or password', 'danger')
+        else:
+            flash('Invalid username or password', 'danger')
     return render_template('login.html', form=form)
 
 @main_bp.route('/register', methods=['GET', 'POST'])
@@ -43,7 +44,7 @@ def register():
             last_name = form.last_name.data
             email = form.email.data
             username = form.username.data
-            password = hash_password(form.password.data)
+            password = app.utils.security.hash_password(form.password.data)
             
             # Register the user in the in-memory dictionary
             if username not in current_app.users:
@@ -56,7 +57,7 @@ def register():
                     'password': password
                 }
 
-            if register_user(username, password):
+            if register_user(username, password['hashed_password']):
                  flash('User registered successfully!', 'success')
             else:
                 flash('User already exists!', 'danger')
