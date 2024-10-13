@@ -3,7 +3,6 @@ from app.forms import LoginForm, RegisterForm, MFAForm
 from app.utils.security import verify_password, generate_unique_user_id
 from app.utils.register_users import register_user
 import app.utils.security
-from base64 import b64encode
 
 main_bp = Blueprint('main', __name__)
 
@@ -23,8 +22,8 @@ def login():
         username = form.username.data
         password = form.password.data
         user = current_app.users.get(username)
-        print(current_app.users)
-        if user and verify_password(user['password'], password):
+        print(user['password'], password)
+        if user and verify_password(user['password']['hashed_password'], user['password']['salt'], password):
             print(f"{user} logged in")
             session['user_id'] = user['id']
             session['logged_in'] = True  # Set session token
