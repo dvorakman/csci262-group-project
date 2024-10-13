@@ -41,7 +41,7 @@ def register():
     if form.validate_on_submit():
             username = form.username.data
             password = form.password.data
-            if password_checker:
+            if password_checker(password):
                 first_name = form.first_name.data
                 last_name = form.last_name.data
                 email = form.email.data
