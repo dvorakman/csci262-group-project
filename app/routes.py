@@ -23,7 +23,7 @@ def index():
         return redirect(url_for('main.login'))
 
 @main_bp.route('/login', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -37,6 +37,9 @@ def login():
         if user_data and verify_password(user_data['password']['hashed_password'], user_data['password']['salt'], password):
             user = User(user_data['id'], username, user_data['password'])
             login_user(user)
+            if not user_data.get('mfa_completed', False):
+                flash('Please complete MFA setup', 'warning')
+                return redirect(url_for('main.mfa_setup', user_id=user.id))
             flash('Login successful, please complete MFA', 'success')
             return redirect(url_for('main.mfa'))
         else:
@@ -44,7 +47,7 @@ def login():
     return render_template('login.html', form=form)
 
 @main_bp.route('/register', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -83,7 +86,7 @@ def register():
 
 @main_bp.route('/mfa-setup/<user_id>', methods=['GET', 'POST'])
 @login_required_with_flash
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 def mfa_setup(user_id):
     user_data = None
     for user in current_app.users.values():
@@ -125,7 +128,7 @@ def mfa_setup(user_id):
 
 @main_bp.route('/mfa', methods=['GET', 'POST'])
 @login_required_with_flash
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute")
 def mfa():
     form = MFAForm()
     if form.validate_on_submit():

@@ -14,9 +14,11 @@ def login_required_with_flash(f):
 def mfa_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for('main.login'))
         if not current_user.mfa_completed:
-            flash('Please complete MFA setup.', 'warning')
-            return redirect(url_for('main.mfa'))
+            flash('Please complete MFA setup', 'warning')
+            return redirect(url_for('main.mfa_setup', user_id=current_user.id))
         return f(*args, **kwargs)
     return decorated_function
 
