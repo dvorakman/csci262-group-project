@@ -1,95 +1,106 @@
-# csci262-group-project
+# Flask Authentication and MFA Project
 
-## Project Overview
+This project is a Flask-based web application that provides user authentication and multi-factor authentication (MFA) features. It includes user registration, login, and a secure dashboard accessible only to authenticated users.
 
-This project is a Flask web application designed to demonstrate various security features for a login system. The application includes multifactor authentication (MFA), password policies, hash salting, and potentially behavioral analytics and passkeys. The goal is to develop an overall defense solution against password cracking.
+## Table of Contents
 
-## Project Structure
-
-```text
-project_root/
-│
-├── app/
-│   ├── __init__.py
-│   ├── routes.py
-│   ├── forms.py
-│   ├── templates/
-│   │   ├── base.html
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   └── dashboard.html
-│   └── utils/
-│       └── security.py
-│
-├── tests/
-│   └── test_routes.py
-├── requirements.txt
-├── config.py
-└── run.py
-```
-
-### app/
-
-- `__init__.py`: Initialises the Flask application and sets up configurations.
-- `routes.py`: Contains the route definitions for the application, including login, registration, and MFA.
-- `forms.py`: Defines the forms used in the application, such as `LoginForm` and `RegisterForm`.
-- `templates/`: Contains the HTML templates for rendering the web pages.
-  - `base.html`: Base template that other templates extend.
-  - `login.html`: Template for the login page.
-  - `register.html`: Template for the registration page.
-  - `dashboard.html`: Template for the dashboard page after successful MFA.
-- `utils/`: Contains utility modules.
-  - `security.py`: Contains security-related functions such as password hashing and verification.
-
-### tests/
-
-- `test_routes.py`: Contains unit tests for the routes in the application.
-
-### requirements.txt
-
-Lists the Python dependencies required for the project.
-
-### config.py
-
-Contains configuration settings for the Flask application.
-
-### run.py
-
-Entry point for running the Flask application.
-
-## Setup Instructions
-
-1. **Clone the repository**:
-   ```sh
-   git clone https://github.com/yourusername/csci262-group-project.git
-   cd csci262-group-project
-   ```
-
-2. **Create a virtual environment**:
-   ```sh
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-3. **Install dependencies**:
-   ```sh
-   pip install -r requirements.txt
-   ```
-
-4. **Run the application**:
-   ```sh
-   python run.py
-   ```
-
-5. **Access the application**:
-   Open your web browser and navigate to `http://127.0.0.1:5000`.
+- [Flask Authentication and MFA Project](#flask-authentication-and-mfa-project)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Project Structure](#project-structure)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Routes](#routes)
 
 ## Features
 
-- **Login**: Users can log in with their credentials.
-- **Registration**: New users can register with a unique user ID and password.
-- **Multifactor Authentication (MFA)**: After successful login, users are prompted to complete an MFA challenge.
-- **Password Policies**: Enforces strong password policies.
-- **Hash Salting**: Uses salt and pepper for hashing passwords to enhance security.
-- **Behavioral Analytics** (Planned): Tracks user behavior to detect anomalies.
-- **Passkeys** (Planned): Implements WebAuthn for passkey support.
+- User Registration
+- User Login
+- Multi-Factor Authentication (MFA) Setup and Challenge
+- Secure Dashboard
+- User List (Admin View)
+- Flash Messages for User Feedback
+
+## Project Structure
+
+```plaintext
+.
+├── .gitignore
+├── app/
+│   ├── __init__.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── routes.py
+│   ├── static/
+│   │   └── js/
+│   │       └── registration_validation.js
+│   ├── templates/
+│   │   ├── base.html
+│   │   ├── dashboard.html
+│   │   ├── list_users.html
+│   │   ├── login.html
+│   │   ├── mfa_setup.html
+│   │   ├── mfa.html
+│   │   └── register.html
+│   └── utils/
+│       ├── decorators.py
+│       ├── register_users.py
+│       ├── security.py
+│       └── validators.py
+├── config.py
+├── README.md
+├── requirements.txt
+└── run.py
+```
+
+## Installation
+
+1. **Clone the repository:**
+    ```sh
+    git clone https://github.com/dvorakman/csci262-group-project.git
+    cd csci262-group-project
+    ```
+
+2. **Create a virtual environment:**
+    ```sh
+    python3 -m venv venv
+    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    ```
+
+3. **Install the dependencies:**
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+4. **Set up environment variables:**
+    Create a `.env` file in the root directory and add the following:
+    ```env
+    FLASK_APP=run.py
+    FLASK_ENV=development
+    SECRET_KEY=your_secret_key
+    PEPPER=your_pepper
+    ```
+
+5. **Run the application:**
+    ```sh
+    python run.py
+    ```
+
+## Usage
+
+- **Register a new user:** Navigate to `/register` and fill out the registration form.
+- **Login:** Navigate to `/login` and enter your credentials.
+- **Set up MFA:** After logging in, navigate to `/mfa-setup` to set up multi-factor authentication.
+- **Access the dashboard:** Navigate to `/dashboard` to access the secure dashboard.
+- **List users:** Navigate to `/list_users` to view the list of registered users (debug).
+
+## Routes
+
+- **`/`**: Home page (requires login)
+- **`/login`**: User login page
+- **`/register`**: User registration page
+- **`/mfa-setup/<user_id>`**: MFA setup page (requires login)
+- **`/mfa`**: MFA challenge page (requires login)
+- **`/dashboard`**: Secure dashboard (requires login and MFA)
+- **`/list_users`**: List of registered users (debug)
+- **`/logout`**: Logout the current user
