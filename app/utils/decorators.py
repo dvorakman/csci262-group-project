@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, session
 from flask_login import current_user
 
 def mfa_required(f):
@@ -8,5 +8,15 @@ def mfa_required(f):
         if not current_user.mfa_completed:
             flash('Please complete MFA setup.', 'warning')
             return redirect(url_for('main.mfa'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def temp_user_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        temp_user = session.get('temp_user')
+        if not temp_user or (current_user.is_authenticated and current_user.id != temp_user['id']):
+            flash('Unauthorized access or session expired', 'danger')
+            return redirect(url_for('main.login'))
         return f(*args, **kwargs)
     return decorated_function

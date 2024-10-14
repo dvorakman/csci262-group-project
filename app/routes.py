@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, session
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, MFAForm
 from app.utils.security import verify_password, generate_unique_user_id, hash_password, password_checker
 from app.utils.register_users import register_user
-from app.utils.decorators import mfa_required
+from app.utils.decorators import mfa_required, temp_user_required
 from app.models import User
 import pyotp
 import qrcode
@@ -74,7 +74,7 @@ def register():
             flash('Password does not meet security requirements', 'danger')
     return render_template('register.html', form=form)
 
-@main_bp.route('/mfa-setup/<user_id>')
+@main_bp.route('/mfa-setup/<user_id>', methods=['GET', 'POST'])
 @login_required
 def mfa_setup(user_id):
     user_data = None
@@ -95,7 +95,18 @@ def mfa_setup(user_id):
     buf.seek(0)
     img_data = base64.b64encode(buf.getvalue()).decode('utf-8')  # Convert image to base64 string
 
-    return render_template('mfa_setup.html', img_data=img_data)
+    form = MFAForm()
+    if form.validate_on_submit():
+        otp = form.otp.data
+        if totp.verify(otp):
+            user_data['mfa_completed'] = True
+            flash('MFA setup completed successfully!', 'success')
+            logout_user()  # Log the user out
+            return redirect(url_for('main.login'))  # Redirect to the login page
+        else:
+            flash('Invalid OTP, please try again.', 'danger')
+
+    return render_template('mfa_setup.html', img_data=img_data, form=form)
 
 @main_bp.route('/mfa', methods=['GET', 'POST'])
 @login_required
@@ -124,8 +135,6 @@ def dashboard():
     return render_template('dashboard.html')
 
 @main_bp.route('/list_users', methods=['GET'])
-@login_required
-@mfa_required
 def list_users():
     return render_template('list_users.html', users=current_app.users)
 
