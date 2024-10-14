@@ -44,6 +44,10 @@ def register():
     if form.validate_on_submit():
         username = form.username.data
         password = form.password.data
+        confirm_password = form.confirm_password.data
+        if password != confirm_password:
+            flash('Passwords do not match', 'danger')
+            return render_template('register.html', form=form)
         if password_checker(password):
             first_name = form.first_name.data
             last_name = form.last_name.data
@@ -60,15 +64,10 @@ def register():
                     'last_name': last_name,
                     'email': email,
                     'password': hashed_password,
-                    'mfa_secret': mfa_secret,  # Store MFA secret
-                    'mfa_completed': False  # Initialize MFA completed flag
+                    'mfa_secret': mfa_secret
                 }
-                # Create a User object and log in the user
-                user = User(user_id, username, hashed_password, mfa_secret)
-                login_user(user)
-                flash('Registration successful, please set up MFA', 'success')
-                flash('Redirecting to MFA setup', 'info')
-                return redirect(url_for('main.mfa_setup', user_id=user_id))
+                flash('Registration successful, please log in', 'success')
+                return redirect(url_for('main.login'))
             else:
                 flash('Username already exists', 'danger')
         else:

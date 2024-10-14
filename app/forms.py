@@ -1,7 +1,7 @@
 # app/forms.py
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, Email
+from wtforms.validators import DataRequired, Length, Email, EqualTo
 from app.utils.validators import has_uppercase, has_lowercase, has_digit, has_special, no_spaces, valid_email
 
 class LoginForm(FlaskForm):
@@ -22,6 +22,10 @@ class RegisterForm(FlaskForm):
         has_digit,
         has_special,
         no_spaces
+    ])
+    confirm_password = PasswordField('Confirm Password', validators=[
+        DataRequired(),
+        EqualTo('password', message='Passwords must match')
     ])
     submit = SubmitField('Register')
 

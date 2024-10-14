@@ -13,6 +13,10 @@
         {{ form.password.label }}<br>
         {{ form.password(size=32) }}
     </div>
+    <div>
+        {{ form.confirm_password.label }}<br>
+        {{ form.confirm_password(size=32) }}
+    </div>
     <div id="password-criteria">
         <p id="uppercase">At least one uppercase letter</p>
         <p id="lowercase">At least one lowercase letter</p>
@@ -20,6 +24,7 @@
         <p id="special">At least one special character</p>
         <p id="no-spaces">No spaces allowed</p>
         <p id="min-length">At least 8 characters</p>
+        <p id="password-match">Passwords must match</p>
     </div>
     <div>
         {{ form.first_name.label }}<br>

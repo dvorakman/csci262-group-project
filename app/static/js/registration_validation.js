@@ -1,30 +1,20 @@
-// static/js/password_validation.js
-document.addEventListener('DOMContentLoaded', function() {
-    const passwordInput = document.querySelector('input[name="password"]');
-    const emailInput = document.querySelector('input[name="email"]');
-    const criteria = {
-        uppercase: document.getElementById('uppercase'),
-        lowercase: document.getElementById('lowercase'),
-        digit: document.getElementById('digit'),
-        special: document.getElementById('special'),
-        noSpaces: document.getElementById('no-spaces'),
-        minLength: document.getElementById('min-length'),
-        emailValidity: document.getElementById('email-validity')
-    };
+// static/js/registration_validation.js
 
-    passwordInput.addEventListener('input', function() {
-        const password = passwordInput.value;
-        criteria.uppercase.style.color = /[A-Z]/.test(password) ? 'green' : 'red';
-        criteria.lowercase.style.color = /[a-z]/.test(password) ? 'green' : 'red';
-        criteria.digit.style.color = /\d/.test(password) ? 'green' : 'red';
-        criteria.special.style.color = /[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'green' : 'red';
-        criteria.noSpaces.style.color = /\s/.test(password) ? 'red' : 'green';
-        criteria.minLength.style.color = password.length >= 8 ? 'green' : 'red';
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    const password = document.querySelector('input[name="password"]');
+    const confirmPassword = document.querySelector('input[name="confirm_password"]');
+    const passwordMatchCriteria = document.getElementById('password-match');
 
-    emailInput.addEventListener('input', function() {
-        const email = emailInput.value;
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        criteria.emailValidity.style.color = emailPattern.test(email) ? 'green' : 'red';
-    });
+    function validatePasswordMatch() {
+        if (password.value === confirmPassword.value) {
+            passwordMatchCriteria.style.color = 'green';
+            passwordMatchCriteria.textContent = 'Passwords match';
+        } else {
+            passwordMatchCriteria.style.color = 'red';
+            passwordMatchCriteria.textContent = 'Passwords do not match';
+        }
+    }
+
+    password.addEventListener('input', validatePasswordMatch);
+    confirmPassword.addEventListener('input', validatePasswordMatch);
 });
