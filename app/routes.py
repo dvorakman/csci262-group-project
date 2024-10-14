@@ -4,6 +4,7 @@ from app.forms import LoginForm, RegisterForm, MFAForm
 from app.utils.security import verify_password, generate_unique_user_id, hash_password, password_checker
 from app.utils.register_users import register_user
 from app.models import User
+import pyotp
 
 main_bp = Blueprint('main', __name__)
 
@@ -43,7 +44,8 @@ def register():
             last_name = form.last_name.data
             email = form.email.data
             hashed_password = hash_password(password)
-            
+            mfa_secret = pyotp.random_base32()  # Generate MFA secret
+
             if username not in current_app.users:
                 user_id = generate_unique_user_id()
                 current_app.users[username] = {
@@ -52,7 +54,8 @@ def register():
                     'first_name': first_name,
                     'last_name': last_name,
                     'email': email,
-                    'password': hashed_password
+                    'password': hashed_password,
+                    'mfa_secret': mfa_secret  # Store MFA secret
                 }
                 flash('Registration successful, please log in', 'success')
                 return redirect(url_for('main.login'))
