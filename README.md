@@ -20,6 +20,7 @@ This project is a Flask-based web application that provides user authentication 
 - Secure Dashboard
 - User List (Admin View)
 - Flash Messages for User Feedback
+- Rate Limiting
 
 ## Project Structure
 
