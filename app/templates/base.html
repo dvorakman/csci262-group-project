@@ -131,6 +131,52 @@
         td {
             background-color: #1a1a1a;
         }
+
+        /* Password Criteria Styles */
+        #password-criteria {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #cccccc;
+            list-style: none;
+            padding: 0;
+        }
+        #password-criteria p {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        #password-criteria p.valid {
+            color: #4caf50; /* Green for valid */
+            background-color: #2d2d2d;
+        }
+        #password-criteria p.invalid {
+            color: #ff4d4f; /* Red for invalid */
+            background-color: #2d2d2d;
+        }
+        #password-criteria i.icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        #email-validity {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #1a1a1a;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        #email-validity.valid {
+            color: #4caf50;
+            background-color: #2d2d2d;
+        }
+        #email-validity.invalid {
+            color: #ff4d4f;
+            background-color: #2d2d2d;
+        }
     </style>
     <script>
         // Function to fade out flash messages

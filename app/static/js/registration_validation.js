@@ -1,9 +1,8 @@
-// static/js/registration_validation.js
-
 document.addEventListener('DOMContentLoaded', function () {
-    const password = document.querySelector('input[name="password"]');
-    const confirmPassword = document.querySelector('input[name="confirm_password"]');
+    const passwordInput = document.querySelector('input[name="password"]');
+    const confirmPasswordInput = document.querySelector('input[name="confirm_password"]');
     const emailInput = document.querySelector('input[name="email"]');
+    
     const criteria = {
         uppercase: document.getElementById('uppercase'),
         lowercase: document.getElementById('lowercase'),
@@ -11,41 +10,48 @@ document.addEventListener('DOMContentLoaded', function () {
         special: document.getElementById('special'),
         noSpaces: document.getElementById('no-spaces'),
         minLength: document.getElementById('min-length'),
-        passwordMatch: document.getElementById('password-match'),
-        emailValidity: document.getElementById('email-validity')
+        passwordMatch: document.getElementById('password-match')
     };
 
-    function validatePasswordMatch() {
-        if (password.value === confirmPassword.value) {
-            criteria.passwordMatch.style.color = 'green';
-            criteria.passwordMatch.textContent = 'Passwords match';
-        } else {
-            criteria.passwordMatch.style.color = 'red';
-            criteria.passwordMatch.textContent = 'Passwords do not match';
-        }
+    passwordInput.addEventListener('input', validatePassword);
+    confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+    emailInput.addEventListener('input', validateEmail);
+
+    function validatePassword() {
+        const password = passwordInput.value;
+
+        criteria.uppercase.classList.toggle('valid', /[A-Z]/.test(password));
+        criteria.uppercase.classList.toggle('invalid', !/[A-Z]/.test(password));
+
+        criteria.lowercase.classList.toggle('valid', /[a-z]/.test(password));
+        criteria.lowercase.classList.toggle('invalid', !/[a-z]/.test(password));
+
+        criteria.digit.classList.toggle('valid', /\d/.test(password));
+        criteria.digit.classList.toggle('invalid', !/\d/.test(password));
+
+        criteria.special.classList.toggle('valid', /[!@#$%^&*(),.?":{}|<>]/.test(password));
+        criteria.special.classList.toggle('invalid', !/[!@#$%^&*(),.?":{}|<>]/.test(password));
+
+        criteria.noSpaces.classList.toggle('valid', !/\s/.test(password));
+        criteria.noSpaces.classList.toggle('invalid', /\s/.test(password));
+
+        criteria.minLength.classList.toggle('valid', password.length >= 8);
+        criteria.minLength.classList.toggle('invalid', password.length < 8);
+
+        validatePasswordMatch();
     }
 
-    function validatePasswordCriteria() {
-        const passwordValue = password.value;
-        criteria.uppercase.style.color = /[A-Z]/.test(passwordValue) ? 'green' : 'red';
-        criteria.lowercase.style.color = /[a-z]/.test(passwordValue) ? 'green' : 'red';
-        criteria.digit.style.color = /\d/.test(passwordValue) ? 'green' : 'red';
-        criteria.special.style.color = /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue) ? 'green' : 'red';
-        criteria.noSpaces.style.color = /\s/.test(passwordValue) ? 'red' : 'green';
-        criteria.minLength.style.color = passwordValue.length >= 8 ? 'green' : 'red';
+    function validatePasswordMatch() {
+        const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
+        criteria.passwordMatch.classList.toggle('valid', passwordsMatch);
+        criteria.passwordMatch.classList.toggle('invalid', !passwordsMatch);
     }
 
     function validateEmail() {
-        const emailValue = emailInput.value;
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        criteria.emailValidity.style.color = emailPattern.test(emailValue) ? 'green' : 'red';
+        const email = emailInput.value;
+        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+        document.getElementById('email-validity').classList.toggle('valid', isValid);
+        document.getElementById('email-validity').classList.toggle('invalid', !isValid);
     }
-
-    password.addEventListener('input', function() {
-        validatePasswordCriteria();
-        validatePasswordMatch();
-    });
-
-    confirmPassword.addEventListener('input', validatePasswordMatch);
-    emailInput.addEventListener('input', validateEmail);
 });
