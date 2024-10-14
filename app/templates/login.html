@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
+
 {% block content %}
 <h2>Login</h2>
 <form method="POST" action="{{ url_for('main.login') }}">
     {{ form.hidden_tag() }}
     <div>
-        {{ form.username.label }} {{ form.username(size=32) }}
+        {{ form.username.label }}<br>
+        {{ form.username(size=32) }}
     </div>
     <div>
-        {{ form.password.label }} {{ form.password(size=32) }}
+        {{ form.password.label }}<br>
+        {{ form.password(size=32) }}
     </div>
-    <div>
-        <button type="submit">Login</button>
-    </div>
+    <button type="submit">Login</button>
 </form>
 {% endblock %}
