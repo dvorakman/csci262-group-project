@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Set Up MFA</h2>
+<p>Scan this QR code with your authenticator app:</p>
+<img src="data:image/png;base64,{{ img_data }}" alt="MFA QR Code">
+<p>After scanning, enter the OTP in the login page to complete the MFA setup.</p>
+{% endblock %}

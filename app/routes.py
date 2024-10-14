@@ -3,11 +3,13 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, MFAForm
 from app.utils.security import verify_password, generate_unique_user_id, hash_password, password_checker
 from app.utils.register_users import register_user
+from app.utils.decorators import mfa_required
 from app.models import User
 import pyotp
 import qrcode
 from io import BytesIO
 from flask import send_file
+import base64
 
 main_bp = Blueprint('main', __name__)
 
@@ -58,27 +60,42 @@ def register():
                     'last_name': last_name,
                     'email': email,
                     'password': hashed_password,
-                    'mfa_secret': mfa_secret  # Store MFA secret
+                    'mfa_secret': mfa_secret,  # Store MFA secret
+                    'mfa_completed': False  # Initialize MFA completed flag
                 }
-                flash('Registration successful, please log in', 'success')
-                return redirect(url_for('main.login'))
+                # Create a User object and log in the user
+                user = User(user_id, username, hashed_password, mfa_secret)
+                login_user(user)
+                flash('Registration successful, please set up MFA', 'success')
+                return redirect(url_for('main.mfa_setup', user_id=user_id))
             else:
                 flash('Username already exists', 'danger')
         else:
             flash('Password does not meet security requirements', 'danger')
     return render_template('register.html', form=form)
 
-@main_bp.route('/mfa-setup')
+@main_bp.route('/mfa-setup/<user_id>')
 @login_required
-def mfa_setup():
-    user = current_user
-    totp = pyotp.TOTP(user.mfa_secret)
-    uri = totp.provisioning_uri(user.username, issuer_name="YourAppName")
+def mfa_setup(user_id):
+    user_data = None
+    for user in current_app.users.values():
+        if user['id'] == user_id:
+            user_data = user
+            break
+
+    if not user_data:
+        flash('User not found', 'danger')
+        return redirect(url_for('main.register'))
+
+    totp = pyotp.TOTP(user_data['mfa_secret'])
+    uri = totp.provisioning_uri(user_data['username'], issuer_name="derekis.cool")
     img = qrcode.make(uri)
     buf = BytesIO()
     img.save(buf)
     buf.seek(0)
-    return send_file(buf, mimetype='image/png')
+    img_data = base64.b64encode(buf.getvalue()).decode('utf-8')  # Convert image to base64 string
+
+    return render_template('mfa_setup.html', img_data=img_data)
 
 @main_bp.route('/mfa', methods=['GET', 'POST'])
 @login_required
@@ -89,14 +106,26 @@ def mfa():
         user = current_user
         totp = pyotp.TOTP(user.mfa_secret)
         if totp.verify(otp):
+            # Update the user's MFA completed flag
+            for user_data in current_app.users.values():
+                if user_data['id'] == user.id:
+                    user_data['mfa_completed'] = True
+                    break
             flash('MFA completed successfully!', 'success')
-            return render_template('dashboard.html')
+            return redirect(url_for('main.dashboard'))  # Redirect to the dashboard or another page
         else:
             flash('Invalid OTP', 'danger')
     return render_template('mfa.html', form=form)
 
+@main_bp.route('/dashboard')
+@login_required
+@mfa_required
+def dashboard():
+    return render_template('dashboard.html')
+
 @main_bp.route('/list_users', methods=['GET'])
 @login_required
+@mfa_required
 def list_users():
     return render_template('list_users.html', users=current_app.users)
 
