@@ -67,6 +67,7 @@ def register():
                 user = User(user_id, username, hashed_password, mfa_secret)
                 login_user(user)
                 flash('Registration successful, please set up MFA', 'success')
+                flash('Redirecting to MFA setup', 'info')
                 return redirect(url_for('main.mfa_setup', user_id=user_id))
             else:
                 flash('Username already exists', 'danger')
@@ -85,6 +86,7 @@ def mfa_setup(user_id):
 
     if not user_data:
         flash('User not found', 'danger')
+        flash('Redirecting to registration page', 'info')
         return redirect(url_for('main.register'))
 
     totp = pyotp.TOTP(user_data['mfa_secret'])
@@ -102,6 +104,7 @@ def mfa_setup(user_id):
             user_data['mfa_completed'] = True
             flash('MFA setup completed successfully!', 'success')
             logout_user()  # Log the user out
+            flash('Please log in again to complete the process', 'info')
             return redirect(url_for('main.login'))  # Redirect to the login page
         else:
             flash('Invalid OTP, please try again.', 'danger')
@@ -123,6 +126,7 @@ def mfa():
                     user_data['mfa_completed'] = True
                     break
             flash('MFA completed successfully!', 'success')
+            flash('Redirecting to dashboard', 'info')
             return redirect(url_for('main.dashboard'))  # Redirect to the dashboard or another page
         else:
             flash('Invalid OTP', 'danger')

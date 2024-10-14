@@ -40,15 +40,16 @@ def generate_unique_user_id():
     return str(uuid.uuid4())
 
 def password_checker(password: str) -> bool:
-    # Create a schema
     schema = PasswordValidator()
-
-    # Add properties to the schema
-    schema.has().uppercase()    # At least one uppercase letter
-    schema.has().lowercase()    # At least one lowercase letter
-    schema.has().digits()       # At least one digit
-    schema.has().no().spaces()  # No spaces allowed
-    schema.has().symbols()      # At least one special character
-
-    # Validate the password based on the schema
+    schema.has().min(Config.PASSWORD_MIN_LENGTH)
+    if Config.PASSWORD_UPPERCASE:
+        schema.has().uppercase()
+    if Config.PASSWORD_LOWERCASE:
+        schema.has().lowercase()
+    if Config.PASSWORD_DIGIT:
+        schema.has().digits()
+    if Config.PASSWORD_SPECIAL:
+        schema.has().symbols()
+    if Config.PASSWORD_NO_SPACES:
+        schema.has().no().spaces()
     return schema.validate(password)
