@@ -16,4 +16,5 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Register')
 
 class MFAForm(FlaskForm):
+    otp = StringField('OTP', validators=[DataRequired()])
     submit = SubmitField('Complete MFA')

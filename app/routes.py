@@ -5,6 +5,9 @@ from app.utils.security import verify_password, generate_unique_user_id, hash_pa
 from app.utils.register_users import register_user
 from app.models import User
 import pyotp
+import qrcode
+from io import BytesIO
+from flask import send_file
 
 main_bp = Blueprint('main', __name__)
 
@@ -65,13 +68,31 @@ def register():
             flash('Password does not meet security requirements', 'danger')
     return render_template('register.html', form=form)
 
+@main_bp.route('/mfa-setup')
+@login_required
+def mfa_setup():
+    user = current_user
+    totp = pyotp.TOTP(user.mfa_secret)
+    uri = totp.provisioning_uri(user.username, issuer_name="YourAppName")
+    img = qrcode.make(uri)
+    buf = BytesIO()
+    img.save(buf)
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png')
+
 @main_bp.route('/mfa', methods=['GET', 'POST'])
 @login_required
 def mfa():
     form = MFAForm()
     if form.validate_on_submit():
-        flash('MFA completed successfully!', 'success')
-        return render_template('dashboard.html')
+        otp = form.otp.data
+        user = current_user
+        totp = pyotp.TOTP(user.mfa_secret)
+        if totp.verify(otp):
+            flash('MFA completed successfully!', 'success')
+            return render_template('dashboard.html')
+        else:
+            flash('Invalid OTP', 'danger')
     return render_template('mfa.html', form=form)
 
 @main_bp.route('/list_users', methods=['GET'])
