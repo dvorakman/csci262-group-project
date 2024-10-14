@@ -66,8 +66,9 @@ def register():
                     'password': hashed_password,
                     'mfa_secret': mfa_secret
                 }
-                flash('Registration successful, please log in', 'success')
-                return redirect(url_for('main.login'))
+                flash('Registration successful, please setup your MFA', 'success')
+                login_user(User(user_id, username, hashed_password))
+                return redirect(url_for('main.mfa_setup', user_id=user_id))
             else:
                 flash('Username already exists', 'danger')
         else:
@@ -87,6 +88,11 @@ def mfa_setup(user_id):
         flash('User not found', 'danger')
         flash('Redirecting to registration page', 'info')
         return redirect(url_for('main.register'))
+
+    # Ensure the current user is the one setting up MFA
+    if current_user.id != user_id:
+        flash('Unauthorized access', 'danger')
+        return redirect(url_for('main.index'))
 
     totp = pyotp.TOTP(user_data['mfa_secret'])
     uri = totp.provisioning_uri(user_data['username'], issuer_name="derekis.cool")
