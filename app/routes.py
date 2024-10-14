@@ -1,5 +1,7 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_limiter import Limiter
+from app import limiter
 from app.forms import LoginForm, RegisterForm, MFAForm
 from app.utils.security import verify_password, generate_unique_user_id, hash_password, password_checker
 from app.utils.register_users import register_user
@@ -14,11 +16,14 @@ import base64
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/', methods=['GET', 'POST'])
-@login_required_with_flash
 def index():
-    return redirect(url_for('main.mfa'))
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
+    else:
+        return redirect(url_for('main.login'))
 
 @main_bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -39,6 +44,7 @@ def login():
     return render_template('login.html', form=form)
 
 @main_bp.route('/register', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -77,6 +83,7 @@ def register():
 
 @main_bp.route('/mfa-setup/<user_id>', methods=['GET', 'POST'])
 @login_required_with_flash
+@limiter.limit("5 per minute")
 def mfa_setup(user_id):
     user_data = None
     for user in current_app.users.values():
@@ -118,6 +125,7 @@ def mfa_setup(user_id):
 
 @main_bp.route('/mfa', methods=['GET', 'POST'])
 @login_required_with_flash
+@limiter.limit("5 per minute")
 def mfa():
     form = MFAForm()
     if form.validate_on_submit():
@@ -144,11 +152,13 @@ def dashboard():
     return render_template('dashboard.html')
 
 @main_bp.route('/list_users', methods=['GET'])
+@limiter.limit("10 per minute")
 def list_users():
     return render_template('list_users.html', users=current_app.users)
 
 @main_bp.route('/logout')
 @login_required_with_flash
+@limiter.limit("10 per minute")
 def logout():
     logout_user()
     flash('You have been logged out.', 'success')
