@@ -10,13 +10,9 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class RegisterForm(FlaskForm):
-    first_name = StringField('First Name', validators=[DataRequired(), Length(min=2, max=50)])
-    last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2, max=50)])
-    email = StringField('Email', validators=[DataRequired(), Email(), valid_email])
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=50)])
+    username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[
         DataRequired(),
-        Length(min=8),
         has_uppercase,
         has_lowercase,
         has_digit,
@@ -27,6 +23,9 @@ class RegisterForm(FlaskForm):
         DataRequired(),
         EqualTo('password', message='Passwords must match')
     ])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email(), valid_email])
     submit = SubmitField('Register')
 
 class MFAForm(FlaskForm):
