@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>MFA Completed!</h1>
-<p>Welcome to the secure dashboard.</p>
+<h2>Dashboard</h2>
+<p>Welcome to the secure dashboard, {{ current_user.username }}!</p>
 {% endblock %}

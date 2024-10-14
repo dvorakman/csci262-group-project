@@ -1,5 +1,6 @@
 <!-- app/templates/register.html -->
 {% extends 'base.html' %}
+
 {% block content %}
 <h2>Register</h2>
 <form method="POST" action="{{ url_for('main.register') }}">
@@ -26,8 +27,4 @@
     </div>
     <button type="submit">Register</button>
 </form>
-{% if current_user.is_authenticated %}
-    <h3>Scan this QR code with your authenticator app:</h3>
-    <img src="{{ url_for('main.mfa_setup') }}" alt="MFA QR Code">
-{% endif %}
 {% endblock %}
