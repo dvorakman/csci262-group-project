@@ -96,7 +96,7 @@ This project is a Flask-based web application that provides user authentication 
 
 ## Routes
 
-- **`/`**: Home page (requires login)
+- **`/`**: Home page
 - **`/login`**: User login page
 - **`/register`**: User registration page
 - **`/mfa-setup/<user_id>`**: MFA setup page (requires login)
