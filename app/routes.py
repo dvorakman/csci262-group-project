@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegisterForm, MFAForm
 from app.utils.security import verify_password, generate_unique_user_id, hash_password, password_checker
 from app.utils.register_users import register_user
-from app.utils.decorators import mfa_required, temp_user_required
+from app.utils.decorators import login_required_with_flash, mfa_required, temp_user_required
 from app.models import User
 import pyotp
 import qrcode
@@ -14,7 +14,7 @@ import base64
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/', methods=['GET', 'POST'])
-@login_required
+@login_required_with_flash
 def index():
     return redirect(url_for('main.mfa'))
 
@@ -76,7 +76,7 @@ def register():
     return render_template('register.html', form=form)
 
 @main_bp.route('/mfa-setup/<user_id>', methods=['GET', 'POST'])
-@login_required
+@login_required_with_flash
 def mfa_setup(user_id):
     user_data = None
     for user in current_app.users.values():
@@ -112,7 +112,7 @@ def mfa_setup(user_id):
     return render_template('mfa_setup.html', img_data=img_data, form=form)
 
 @main_bp.route('/mfa', methods=['GET', 'POST'])
-@login_required
+@login_required_with_flash
 def mfa():
     form = MFAForm()
     if form.validate_on_submit():
@@ -133,7 +133,7 @@ def mfa():
     return render_template('mfa.html', form=form)
 
 @main_bp.route('/dashboard')
-@login_required
+@login_required_with_flash
 @mfa_required
 def dashboard():
     return render_template('dashboard.html')
@@ -143,7 +143,7 @@ def list_users():
     return render_template('list_users.html', users=current_app.users)
 
 @main_bp.route('/logout')
-@login_required
+@login_required_with_flash
 def logout():
     logout_user()
     flash('You have been logged out.', 'success')

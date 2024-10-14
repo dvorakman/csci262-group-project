@@ -41,15 +41,10 @@ def generate_unique_user_id():
 
 def password_checker(password: str) -> bool:
     schema = PasswordValidator()
-    schema.has().min(Config.PASSWORD_MIN_LENGTH)
-    if Config.PASSWORD_UPPERCASE:
-        schema.has().uppercase()
-    if Config.PASSWORD_LOWERCASE:
-        schema.has().lowercase()
-    if Config.PASSWORD_DIGIT:
-        schema.has().digits()
-    if Config.PASSWORD_SPECIAL:
-        schema.has().symbols()
-    if Config.PASSWORD_NO_SPACES:
-        schema.has().no().spaces()
+    schema.has().min(8)
+    schema.has().uppercase()
+    schema.has().lowercase()
+    schema.has().digits()
+    schema.has().symbols()
+    schema.has().no().spaces()
     return schema.validate(password)
