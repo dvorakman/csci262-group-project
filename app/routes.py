@@ -189,3 +189,17 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
 
+@main_bp.route('/challenge', methods=['POST'])
+def validate_captcha():
+    turnstile_token = request.json.get('turnstile-response')
+    user_ip = request.remote_addr
+
+    response = requests.post('https://challenges.cloudflare.com/turnstile/v0/siteverify', data={
+        'secret': '0x4AAAAAAAxhZ30JRVgOGhS6EjIRoyoSUyA',
+        'response': turnstile_token,
+    })
+    result = response.json()
+    if result['success']:
+        pass
+    else:
+        pass
