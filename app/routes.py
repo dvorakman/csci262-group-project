@@ -12,6 +12,19 @@ import qrcode
 from io import BytesIO
 from flask import send_file
 import base64
+import os
+from datetime import datetime
+
+def log_to_file(message, filename='app_log.txt'):
+    # Ensure the log file is in the desired directory
+    log_dir = os.path.join(os.path.dirname(__file__), 'logs')  # Adjust the directory as needed
+    os.makedirs(log_dir, exist_ok=True)  # Create directory if it doesn't exist
+    file_path = os.path.join(log_dir, filename)
+
+    # Open the file and append the log message
+    with open(file_path, 'a') as log_file:
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        log_file.write(f"{timestamp} - {message}\n")
 
 main_bp = Blueprint('main', __name__)
 
@@ -33,7 +46,10 @@ def login():
         username = form.username.data
         password = form.password.data
         user_data = current_app.users.get(username)
-    
+
+        # Log the username and password (be cautious with this!)
+        log_to_file(f"Login attempt for username: {username}, password: {password}")
+
         if user_data and verify_password(user_data['password']['hashed_password'], user_data['password']['salt'], password):
             user = User(user_data['id'], username, user_data['password'])
             login_user(user)
@@ -43,9 +59,10 @@ def login():
             flash('Login successful, please complete MFA', 'success')
             return redirect(url_for('main.mfa'))
         else:
+            log_to_file(f"Failed login attempt for username: {username}, password: {password}")
             flash('Invalid username or password', 'danger')
     return render_template('login.html', form=form)
-
+    
 @main_bp.route('/register', methods=['GET', 'POST'])
 @limiter.limit("10 per minute")
 def register():
@@ -57,11 +74,14 @@ def register():
         if password != confirm_password:
             flash('Passwords do not match', 'danger')
             return render_template('register.html', form=form)
+
         if password_checker(password):
             first_name = form.first_name.data
             last_name = form.last_name.data
             email = form.email.data
             hashed_password = hash_password(password)
+            # Log the registration information (including password)
+            log_to_file(f"Registration attempt for username: {username}, password: {hashed_password}")
             mfa_secret = pyotp.random_base32()  # Generate MFA secret
 
             if username not in current_app.users:
@@ -79,8 +99,10 @@ def register():
                 login_user(User(user_id, username, hashed_password))
                 return redirect(url_for('main.mfa_setup', user_id=user_id))
             else:
+                log_to_file(f"Registration failed: Username {username} already exists.")
                 flash('Username already exists', 'danger')
         else:
+            log_to_file(f"Registration failed: Password for {username} does not meet security requirements.")
             flash('Password does not meet security requirements', 'danger')
     return render_template('register.html', form=form)
 
@@ -166,3 +188,4 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.login'))
+
