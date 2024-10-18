@@ -40,11 +40,11 @@
         }
         .flash-container {
             position: absolute;
-            top: 60px; /* Adjust to place below the header */
+            top: 60px; 
             width: 100%;
             display: flex;
             justify-content: center;
-            z-index: 1001; /* Ensure it is above other content */
+            z-index: 1001; 
         }
         .flashes {
             list-style-type: none;
@@ -62,22 +62,22 @@
             transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
         }
         .flash.danger {
-            background-color: #ff4d4f; /* Red for danger */
+            background-color: #ff4d4f; 
             color: #ffffff;
         }
         .flash.success {
-            background-color: #4caf50; /* Green for success */
+            background-color: #4caf50; 
             color: #ffffff;
         }
         .flash.warning {
-            background-color: #ff9800; /* Yellow for warning */
+            background-color: #ff9800; 
             color: #ffffff;
         }
         .flash.info {
-            background-color: #2196f3; /* Blue for info */
+            background-color: #2196f3; 
             color: #ffffff;
         }
-        /* Fade-out effect */
+        
         .flash.fade-out {
             opacity: 0;
             transform: translateY(-10px);
@@ -89,7 +89,7 @@
             background-color: #1a1a1a;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3);
-            margin-top: 80px; /* Adjust to add space between header and container */
+            margin-top: 80px; 
         }
         h2, h1 {
             color: #ffffff;
@@ -132,7 +132,7 @@
             background-color: #1a1a1a;
         }
 
-        /* Password Criteria Styles */
+        
         #password-criteria {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -151,11 +151,11 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         #password-criteria p.valid {
-            color: #4caf50; /* Green for valid */
+            color: #4caf50; 
             background-color: #2d2d2d;
         }
         #password-criteria p.invalid {
-            color: #ff4d4f; /* Red for invalid */
+            color: #ff4d4f; 
             background-color: #2d2d2d;
         }
         #password-criteria i.icon {
@@ -180,13 +180,12 @@
         }
     </style>
     <script>
-        // Function to fade out flash messages
         document.addEventListener('DOMContentLoaded', function () {
             const flashes = document.querySelectorAll('.flash');
             flashes.forEach(function(flash) {
                 setTimeout(function() {
                     flash.classList.add('fade-out');
-                }, 3000); // 3 seconds before fade out
+                }, 3000);
             });
         });
     </script>
@@ -203,7 +202,6 @@
         {% endif %}
     </header>
 
-    <!-- Flash Messages Section -->
     <div class="flash-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}

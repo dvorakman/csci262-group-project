@@ -16,8 +16,7 @@
         {{ form.confirm_password.label }}<br>
         {{ form.confirm_password(size=32) }}
     </div>
-    
-    <!-- Password Criteria -->
+
     <div id="password-criteria">
         <p id="uppercase"><i class="icon"></i> At least one uppercase letter</p>
         <p id="lowercase"><i class="icon"></i> At least one lowercase letter</p>
@@ -45,6 +44,5 @@
     <button type="submit">Register</button>
 </form>
 
-<!-- Include the JavaScript file -->
 <script src="{{ url_for('static', filename='js/registration_validation.js') }}"></script>
 {% endblock %}
