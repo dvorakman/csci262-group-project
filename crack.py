@@ -2,10 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 
 # URL of the login page and login submission URL
-LOGIN_PAGE_URL = "https://dev.derekis.cool/login"
+LOGIN_PAGE_URL = "x"
 
 # Username to brute force
-username = "dap929"
+username = "x"
 
 # Path to the password list
 password_list = "wordlist.txt"
