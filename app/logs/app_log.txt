@@ -113,3 +113,44 @@
 2024-10-15 14:51:57 - Failed login attempt for username: mm409, password: 9D6%E2G:'sqv=:
 2024-10-15 14:51:58 - Login attempt for username: mm409, password: 9D6%E2G:'sqv=:
 2024-10-15 14:51:58 - Failed login attempt for username: mm409, password: 9D6%E2G:'sqv=:
+2024-10-16 00:15:55 - Login attempt for username: dap929, password: _xK6}i%@MNey"vJ
+2024-10-16 00:15:55 - Failed login attempt for username: dap929, password: _xK6}i%@MNey"vJ
+2024-10-16 00:50:53 - Registration attempt for username: testdummy1, password: {'salt': 'o1kErBAwCVqzT75wNt1n8w==', 'hashed_password': 'eeqHWeOFA279pAD7S+APM2LX8ip2H0NUMChgojEs1PA='}
+2024-10-16 00:51:32 - Registration attempt for username: testdummy2, password: {'salt': '1bLj0j+VpSZmCX+MeOIxzg==', 'hashed_password': 'HY2cE24BLsvNCuEwmbH6TiUmN2R7qQUazUMu5WTBvOk='}
+2024-10-16 01:58:44 - Registration attempt for username: dap929, password: {'salt': 'j/KWe/JPNzjNs0J8jUdjWg==', 'hashed_password': 'O/Qsdj1os6NxACx7ndiEcF5vfhw1wc20SfVp76JP3dM='}
+2024-10-16 01:59:15 - Login attempt for username: dap929, password: _xK6}i%@MNey"vJ
+2024-10-16 02:28:34 - Login attempt for username: admin, password: 123456
+2024-10-16 02:28:34 - Failed login attempt for username: admin, password: 123456
+2024-10-16 02:28:34 - Login attempt for username: admin, password: password
+2024-10-16 02:28:34 - Failed login attempt for username: admin, password: password
+2024-10-16 02:28:35 - Login attempt for username: admin, password: 12345678
+2024-10-16 02:28:35 - Failed login attempt for username: admin, password: 12345678
+2024-10-16 02:28:35 - Login attempt for username: admin, password: qwerty
+2024-10-16 02:28:35 - Failed login attempt for username: admin, password: qwerty
+2024-10-16 02:28:35 - Login attempt for username: admin, password: 1234567
+2024-10-16 02:28:35 - Failed login attempt for username: admin, password: 1234567
+2024-10-16 02:36:43 - Login attempt for username: admin, password: admin
+2024-10-16 02:36:43 - Failed login attempt for username: admin, password: admin
+2024-10-16 04:17:15 - Login attempt for username: bruh, password: bruh
+2024-10-16 04:17:15 - Failed login attempt for username: bruh, password: bruh
+2024-10-16 04:17:24 - Registration attempt for username: Micheal, password: {'salt': '99ZAsNOHbZgupgeGNyuM+g==', 'hashed_password': '3eR9fsDKK7l+XS0F9QLVgzvttkuXYrmEZJdd71Q5suA='}
+2024-10-16 04:17:40 - Registration attempt for username: mm409, password: {'salt': 'ja/83+r3Eg8qJZSTbVKQkQ==', 'hashed_password': 'q50Rl8sHiPcljZp4WuW5qhZnOWRbrrVircGut+NH5v0='}
+2024-10-16 04:18:19 - Login attempt for username: Micheal, password: password$123
+2024-10-16 04:18:19 - Failed login attempt for username: Micheal, password: password$123
+2024-10-16 04:18:23 - Login attempt for username: Micheal, password: Password$123
+2024-10-16 04:18:28 - Login attempt for username: mm409, password: Password9*
+2024-10-16 04:18:40 - Registration attempt for username: nikolasJACKson, password: {'salt': 'WqBmxaflvHoLVd+r7uqiAA==', 'hashed_password': 'qydSj7BcH/qqgnKoYxgL40bVNwHpIVpba9w1kTz0lUA='}
+2024-10-16 04:18:47 - Registration attempt for username: nikolasJACKson, password: {'salt': 'gOJYO+c0d2o06AgaX5hY5A==', 'hashed_password': 'mjZ9UxDptw6HXNEmUvr6yD91As1bQRyxbw20Rh3Lhxk='}
+2024-10-16 04:18:47 - Registration failed: Username nikolasJACKson already exists.
+2024-10-16 04:19:01 - Registration attempt for username: iowfjioewfj, password: {'salt': 'FvfRVD6LWibKdVRAz4634g==', 'hashed_password': 'Vs3wKmt9WX2hWe53tSQGdmMq8cJ4DcFMq+cTYEQSJD0='}
+2024-10-16 04:19:09 - Registration attempt for username: bruhbruh, password: {'salt': 'oq8UFDvthYIZ8nBQmpwrgQ==', 'hashed_password': 'wZGm8qAqf+BIfc8wVP8JQ0iuE17UUuf/7tpR0gJXi9I='}
+2024-10-16 04:19:11 - Login attempt for username: mm409, password: 123456
+2024-10-16 04:19:11 - Failed login attempt for username: mm409, password: 123456
+2024-10-16 04:19:11 - Login attempt for username: mm409, password: password
+2024-10-16 04:19:11 - Failed login attempt for username: mm409, password: password
+2024-10-16 04:19:11 - Login attempt for username: mm409, password: 12345678
+2024-10-16 04:19:11 - Failed login attempt for username: mm409, password: 12345678
+2024-10-16 04:19:11 - Login attempt for username: mm409, password: qwerty
+2024-10-16 04:19:11 - Failed login attempt for username: mm409, password: qwerty
+2024-10-16 04:19:11 - Login attempt for username: mm409, password: 1234567
+2024-10-16 04:19:11 - Failed login attempt for username: mm409, password: 1234567

@@ -3,7 +3,6 @@ import atexit
 
 app = create_app()
 
-# Register the cleanup function
 @atexit.register
 def clear_users():
     with app.app_context():

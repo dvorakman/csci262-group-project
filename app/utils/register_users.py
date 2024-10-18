@@ -5,14 +5,14 @@ from app.utils.security import hash_password, verify_password
 def register_user(username: str, password: str) -> bool:
     """Register a new user with the given username and password."""
     try:
-        # Check if the username already exists
+        
         users = current_app.users
 
         if username in users:
             print(f"{username} already exists.")
             return False
 
-        # Hash the password and get the salt
+        
         result = hash_password(password)
 
         print(f"{username} registered successfully.")
@@ -26,19 +26,19 @@ def register_user(username: str, password: str) -> bool:
 def authenticate_user(username: str, password: str) -> bool:
     """Authenticate the user by checking the provided username and password."""
     try:
-        # Read stored users from the file
+        
         with open(Config.USERS_FILE, 'r') as user_file:
             users = {line.strip().split(":")[0]: (line.strip().split(":")[1], line.strip().split(":")[2]) for line in user_file}
 
-        # Check if the username exists
+        
         if username not in users:
             print(f"{username} does not exist.")
             return False
 
-        # Get the stored hash and salt for the user
+        
         stored_hash, stored_salt = users[username]
 
-        # Check the password
+        
         if verify_password(stored_hash, stored_salt, password):
             print(f"{username} successfully authenticated.")
             return True 

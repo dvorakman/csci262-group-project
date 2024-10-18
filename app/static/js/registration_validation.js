@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
         criteria.digit.classList.toggle('valid', /\d/.test(password));
         criteria.digit.classList.toggle('invalid', !/\d/.test(password));
 
-        criteria.special.classList.toggle('valid', /[!@#$%^&*(),.?":{}|<>]/.test(password));
-        criteria.special.classList.toggle('invalid', !/[!@#$%^&*(),.?":{}|<>]/.test(password));
+        criteria.special.classList.toggle('valid', /[!@
+        criteria.special.classList.toggle('invalid', !/[!@
 
         criteria.noSpaces.classList.toggle('valid', !/\s/.test(password));
         criteria.noSpaces.classList.toggle('invalid', /\s/.test(password));

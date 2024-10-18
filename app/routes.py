@@ -16,12 +16,11 @@ import os
 from datetime import datetime
 
 def log_to_file(message, filename='app_log.txt'):
-    # Ensure the log file is in the desired directory
-    log_dir = os.path.join(os.path.dirname(__file__), 'logs')  # Adjust the directory as needed
-    os.makedirs(log_dir, exist_ok=True)  # Create directory if it doesn't exist
+    log_dir = os.path.join(os.path.dirname(__file__), 'logs')  
+    os.makedirs(log_dir, exist_ok=True)  
     file_path = os.path.join(log_dir, filename)
 
-    # Open the file and append the log message
+    
     with open(file_path, 'a') as log_file:
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         log_file.write(f"{timestamp} - {message}\n")
@@ -47,7 +46,7 @@ def login():
         password = form.password.data
         user_data = current_app.users.get(username)
 
-        # Log the username and password (be cautious with this!)
+        
         log_to_file(f"Login attempt for username: {username}, password: {password}")
 
         if user_data and verify_password(user_data['password']['hashed_password'], user_data['password']['salt'], password):
@@ -80,9 +79,9 @@ def register():
             last_name = form.last_name.data
             email = form.email.data
             hashed_password = hash_password(password)
-            # Log the registration information (including password)
+            
             log_to_file(f"Registration attempt for username: {username}, password: {hashed_password}")
-            mfa_secret = pyotp.random_base32()  # Generate MFA secret
+            mfa_secret = pyotp.random_base32()  
 
             if username not in current_app.users:
                 user_id = generate_unique_user_id()
@@ -121,7 +120,7 @@ def mfa_setup(user_id):
         flash('Redirecting to registration page', 'info')
         return redirect(url_for('main.register'))
 
-    # Ensure the current user is the one setting up MFA
+    
     if current_user.id != user_id:
         flash('Unauthorized access', 'danger')
         return redirect(url_for('main.index'))
@@ -132,7 +131,7 @@ def mfa_setup(user_id):
     buf = BytesIO()
     img.save(buf)
     buf.seek(0)
-    img_data = base64.b64encode(buf.getvalue()).decode('utf-8')  # Convert image to base64 string
+    img_data = base64.b64encode(buf.getvalue()).decode('utf-8')  
 
     form = MFAForm()
     if form.validate_on_submit():
@@ -140,9 +139,9 @@ def mfa_setup(user_id):
         if totp.verify(otp):
             user_data['mfa_completed'] = True
             flash('MFA setup completed successfully!', 'success')
-            logout_user()  # Log the user out
+            logout_user()  
             flash('Please log in again to complete the process', 'info')
-            return redirect(url_for('main.login'))  # Redirect to the login page
+            return redirect(url_for('main.login'))  
         else:
             flash('Invalid OTP, please try again.', 'danger')
 
@@ -158,14 +157,14 @@ def mfa():
         user = current_user
         totp = pyotp.TOTP(user.mfa_secret)
         if totp.verify(otp):
-            # Update the user's MFA completed flag
+            
             for user_data in current_app.users.values():
                 if user_data['id'] == user.id:
                     user_data['mfa_completed'] = True
                     break
             flash('MFA completed successfully!', 'success')
             flash('Redirecting to dashboard', 'info')
-            return redirect(url_for('main.dashboard'))  # Redirect to the dashboard or another page
+            return redirect(url_for('main.dashboard'))  
         else:
             flash('Invalid OTP', 'danger')
     return render_template('mfa.html', form=form)
